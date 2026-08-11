@@ -2,146 +2,136 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vendas Mudam Vidas | Em Breve</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800;900&display=swap" rel="stylesheet">
     
     <style>
-        body { 
-            background-color: #0a0a0a; /* Tom chumbo bem escuro */
-            font-family: 'Inter', sans-serif; 
-            overflow: hidden; 
+        /* Base e Reset para travar a tela e não bugar no celular */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #0a0a0a;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* TEXTURA DE TECIDO CHUMBO / NOISE EM CSS PURO */
-        .fabric-texture {
-            position: fixed;
+        /* CAMADA 1: Textura de Tecido e Luz Neon */
+        .bg-texture {
+            position: absolute;
             inset: 0;
-            z-index: -2;
-            opacity: 0.4; /* Intensidade do relevo */
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            z-index: 1;
             pointer-events: none;
         }
         
-        /* Fita Animada */
-        .animate-marquee { 
-            display: inline-block; 
-            animation: marquee 20s linear infinite; 
-        }
-        @keyframes marquee { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
-        }
-
-        /* Animação da Linha Verde (Cortina Cinematográfica) */
-        .curtain-top, .curtain-bottom {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 50vh;
-            background: #050505; /* Preto absoluto para contraste na abertura */
-            z-index: 100;
-            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        .curtain-top {
-            top: 0;
-            border-bottom: 2px solid #10b981;
-            box-shadow: 0 10px 40px rgba(16,185,129,0.5);
-        }
-        .curtain-bottom {
-            bottom: 0;
-            border-top: 2px solid #10b981;
-            box-shadow: 0 -10px 40px rgba(16,185,129,0.5);
-        }
-
-        .open-curtain .curtain-top { transform: translateY(-100%); }
-        .open-curtain .curtain-bottom { transform: translateY(100%); }
-
-        /* Aura Neon Pulsante (Fica entre o tecido chumbo e a imagem VMV) */
-        .neon-aura {
+        .neon-glow {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120vw; 
+            width: 120vw;
             height: 120vw;
             max-width: 800px;
             max-height: 800px;
-            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.02) 50%, transparent 70%);
-            animation: pulse-aura 4s ease-in-out infinite alternate;
-            z-index: -1;
+            background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0.02) 50%, transparent 70%);
+            animation: pulse-glow 4s ease-in-out infinite alternate;
+            z-index: 2;
             pointer-events: none;
         }
 
-        @keyframes pulse-aura {
-            0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        @keyframes pulse-glow {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
         }
 
-        /* Envelopamento Absoluto da Imagem (Fica presa ATRÁS do texto) */
-        .vmv-bg-wrapper {
+        /* CAMADA 2: Imagem VMV Absoluta no Centro */
+        .vmv-backdrop {
             position: absolute;
-            top: 45%; /* Sobe um pouco a imagem para centralizar melhor com o texto */
+            top: 48%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%;
-            max-width: 600px; /* Controla o tamanho máximo da imagem */
-            z-index: 1; /* Fica atrás da main (z-20) */
+            width: 90%; /* Ocupa 90% da tela no mobile */
+            max-width: 700px; /* Mas trava em 700px no computador */
+            z-index: 3;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 30px rgba(0,0,0,0.9));
             pointer-events: none;
         }
 
-        .vmv-image {
+        /* CAMADA EXTRA: Cortinas de Abertura */
+        .curtain-top, .curtain-bottom {
+            position: absolute;
+            left: 0;
             width: 100%;
-            height: auto;
-            opacity: 0.85; /* Deixa a imagem sutilmente transparente para o texto branco gritar mais */
-            filter: drop-shadow(0 0 40px rgba(0,0,0,0.9));
+            height: 50vh;
+            background: #050505;
+            z-index: 9999;
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
+        .curtain-top { top: 0; border-bottom: 2px solid #10b981; }
+        .curtain-bottom { bottom: 0; border-top: 2px solid #10b981; }
+        
+        body.loaded .curtain-top { transform: translateY(-100%); }
+        body.loaded .curtain-bottom { transform: translateY(100%); }
 
-        /* Revelação suave do conteúdo */
-        .content-reveal {
+        /* Animação de Revelação para Textos e Fita */
+        .reveal-item {
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 1.5s ease-out, transform 1.5s ease-out;
             transition-delay: 0.3s;
         }
-        .open-curtain .content-reveal {
+        body.loaded .reveal-item {
             opacity: 1;
             transform: scale(1);
         }
+
+        /* Fita Animada Contínua */
+        .marquee-container {
+            display: flex;
+            width: max-content;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center relative selection:bg-emerald-500 selection:text-zinc-900">
-    
-    <!-- Fundo de Tecido Chumbo -->
-    <div class="fabric-texture"></div>
+<body>
 
-    <!-- Animação de Abertura -->
+    <!-- Cortinas de Abertura -->
     <div class="curtain-top"></div>
     <div class="curtain-bottom"></div>
 
-    <!-- O Gradiente Neon em CSS -->
-    <div class="neon-aura"></div>
+    <!-- FUNDO: Textura, Luz Neon e Imagem VMV -->
+    <div class="bg-texture"></div>
+    <div class="neon-glow"></div>
+    <img src="vmv-img.png" alt="VMV" class="vmv-backdrop reveal-item">
 
-    <!-- IMAGEM VMV - Agora posicionada absolutamente ATRÁS do texto -->
-    <div class="content-reveal vmv-bg-wrapper">
-        <img src="vmv-img.png" alt="VMV" class="vmv-image">
-    </div>
-
-    <!-- Conteúdo Principal (z-20 garante que fica na frente da imagem) -->
-    <main class="content-reveal z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full relative mt-[-20px]">
-        <h1 class="text-4xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)]">
-            Menos barulho, <br class="hidden md:block" />
+    <!-- FRENTE: Textos Centralizados -->
+    <main class="relative z-10 flex flex-col items-center justify-center w-full h-full px-6 text-center reveal-item mt-[-3%]">
+        <h1 class="text-[2.2rem] md:text-7xl uppercase font-black leading-[1.05] md:leading-[0.95] tracking-tighter mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] text-white">
+            Menos barulho, <br>
             <span class="text-emerald-400">mais clareza.</span>
         </h1>
-        <p class="text-base md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]">
+        <p class="text-base md:text-2xl text-zinc-300 max-w-xl leading-relaxed font-light drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]">
             O guia definitivo para entender o digital antes de dar o primeiro passo.
         </p>
     </main>
 
-    <!-- Fita Animada -->
-    <div class="content-reveal absolute bottom-12 md:bottom-20 left-[-5%] w-[110%] bg-emerald-500 py-[14px] md:py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] rotate-[-2deg] z-30 border-y-[3px] border-emerald-900">
-        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-xl md:text-[26px] tracking-[0.2em] uppercase flex items-center">
+    <!-- RODAPÉ: Fita Animada -->
+    <div class="reveal-item absolute bottom-8 md:bottom-16 left-[-10%] w-[120%] bg-emerald-500 py-3 md:py-4 shadow-[0_10px_40px_rgba(0,0,0,0.9)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900">
+        <div class="marquee-container text-zinc-950 font-black text-xl md:text-[26px] tracking-[0.2em] uppercase items-center">
+            <!-- Os itens são repetidos para a fita não quebrar -->
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
@@ -149,12 +139,13 @@
         </div>
     </div>
 
+    <!-- Script de Abertura -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        window.onload = () => {
             setTimeout(() => {
-                document.body.classList.add('open-curtain');
-            }, 1000);
-        });
+                document.body.classList.add('loaded');
+            }, 800); 
+        };
     </script>
 </body>
 </html>
