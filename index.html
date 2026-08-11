@@ -9,9 +9,19 @@
     
     <style>
         body { 
-            background-color: #050505; 
+            background-color: #0a0a0a; /* Tom chumbo bem escuro */
             font-family: 'Inter', sans-serif; 
             overflow: hidden; 
+        }
+
+        /* TEXTURA DE TECIDO CHUMBO / NOISE EM CSS PURO */
+        .fabric-texture {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            opacity: 0.4; /* Intensidade do relevo */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            pointer-events: none;
         }
         
         /* Fita Animada */
@@ -30,7 +40,7 @@
             left: 0;
             width: 100%;
             height: 50vh;
-            background: #000;
+            background: #050505; /* Preto absoluto para contraste na abertura */
             z-index: 100;
             transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
@@ -45,33 +55,47 @@
             box-shadow: 0 -10px 40px rgba(16,185,129,0.5);
         }
 
-        /* Classes ativadas pelo JavaScript para abrir a tela */
-        .open-curtain .curtain-top {
-            transform: translateY(-100%);
-        }
-        .open-curtain .curtain-bottom {
-            transform: translateY(100%);
-        }
+        .open-curtain .curtain-top { transform: translateY(-100%); }
+        .open-curtain .curtain-bottom { transform: translateY(100%); }
 
-        /* Aura Neon Pulsante (Substitui o vídeo de fundo) */
+        /* Aura Neon Pulsante (Fica entre o tecido chumbo e a imagem VMV) */
         .neon-aura {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150vw; 
-            height: 150vw;
+            width: 120vw; 
+            height: 120vw;
             max-width: 800px;
             max-height: 800px;
-            background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(16,185,129,0.05) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.02) 50%, transparent 70%);
             animation: pulse-aura 4s ease-in-out infinite alternate;
-            z-index: 1;
+            z-index: -1;
             pointer-events: none;
         }
 
         @keyframes pulse-aura {
             0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
             100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        /* Envelopamento Absoluto da Imagem (Fica presa ATRÁS do texto) */
+        .vmv-bg-wrapper {
+            position: absolute;
+            top: 45%; /* Sobe um pouco a imagem para centralizar melhor com o texto */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 600px; /* Controla o tamanho máximo da imagem */
+            z-index: 1; /* Fica atrás da main (z-20) */
+            pointer-events: none;
+        }
+
+        .vmv-image {
+            width: 100%;
+            height: auto;
+            opacity: 0.85; /* Deixa a imagem sutilmente transparente para o texto branco gritar mais */
+            filter: drop-shadow(0 0 40px rgba(0,0,0,0.9));
         }
 
         /* Revelação suave do conteúdo */
@@ -85,38 +109,32 @@
             opacity: 1;
             transform: scale(1);
         }
-
-        /* Ajuste fino da imagem do letreiro */
-        .vmv-image {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            position: relative;
-            z-index: 2;
-            filter: drop-shadow(0 0 40px rgba(0,0,0,0.9)); /* Cria sombra para destacar no verde */
-        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-center relative selection:bg-emerald-500 selection:text-zinc-900">
     
-    <!-- Animação de Abertura (As linhas que se dividem) -->
+    <!-- Fundo de Tecido Chumbo -->
+    <div class="fabric-texture"></div>
+
+    <!-- Animação de Abertura -->
     <div class="curtain-top"></div>
     <div class="curtain-bottom"></div>
 
     <!-- O Gradiente Neon em CSS -->
     <div class="neon-aura"></div>
 
-    <!-- Conteúdo Principal -->
-    <main class="content-reveal z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full relative mt-[-20px]">
-        
-        <!-- A IMAGEM ESTÁTICA ENTRA AQUI -->
-        <img src="vmv-img.png" alt="VMV" class="vmv-image mb-4">
+    <!-- IMAGEM VMV - Agora posicionada absolutamente ATRÁS do texto -->
+    <div class="content-reveal vmv-bg-wrapper">
+        <img src="vmv-img.png" alt="VMV" class="vmv-image">
+    </div>
 
-        <h1 class="text-4xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] z-10">
+    <!-- Conteúdo Principal (z-20 garante que fica na frente da imagem) -->
+    <main class="content-reveal z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full relative mt-[-20px]">
+        <h1 class="text-4xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)]">
             Menos barulho, <br class="hidden md:block" />
             <span class="text-emerald-400">mais clareza.</span>
         </h1>
-        <p class="text-base md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] z-10 relative">
+        <p class="text-base md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]">
             O guia definitivo para entender o digital antes de dar o primeiro passo.
         </p>
     </main>
@@ -131,10 +149,8 @@
         </div>
     </div>
 
-    <!-- Script que aciona a abertura -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Segura a tela preta com a linha verde por 1 segundo e depois abre
             setTimeout(() => {
                 document.body.classList.add('open-curtain');
             }, 1000);
