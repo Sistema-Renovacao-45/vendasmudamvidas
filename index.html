@@ -9,9 +9,9 @@
     
     <style>
         body { 
-            background-color: #000; 
+            background-color: #050505; 
             font-family: 'Inter', sans-serif; 
-            overflow: hidden; /* Trava a rolagem da página */
+            overflow: hidden; 
         }
         
         /* Fita Animada */
@@ -23,97 +23,121 @@
             0% { transform: translateX(0); } 
             100% { transform: translateX(-50%); } 
         }
-        
-        /* Ajuste para os vídeos cobrirem toda a tela sem distorcer */
-        .bg-video {
+
+        /* Animação da Linha Verde (Cortina Cinematográfica) */
+        .curtain-top, .curtain-bottom {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: #000;
+            z-index: 100;
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .curtain-top {
+            top: 0;
+            border-bottom: 2px solid #10b981;
+            box-shadow: 0 10px 40px rgba(16,185,129,0.5);
+        }
+        .curtain-bottom {
+            bottom: 0;
+            border-top: 2px solid #10b981;
+            box-shadow: 0 -10px 40px rgba(16,185,129,0.5);
+        }
+
+        /* Classes ativadas pelo JavaScript para abrir a tela */
+        .open-curtain .curtain-top {
+            transform: translateY(-100%);
+        }
+        .open-curtain .curtain-bottom {
+            transform: translateY(100%);
+        }
+
+        /* Aura Neon Pulsante (Substitui o vídeo de fundo) */
+        .neon-aura {
             position: absolute;
             top: 50%;
             left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
+            transform: translate(-50%, -50%);
+            width: 150vw; 
+            height: 150vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(16,185,129,0.05) 40%, transparent 70%);
+            animation: pulse-aura 4s ease-in-out infinite alternate;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-aura {
+            0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        /* Revelação suave do conteúdo */
+        .content-reveal {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+            transition-delay: 0.3s;
+        }
+        .open-curtain .content-reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Ajuste fino da imagem do letreiro */
+        .vmv-image {
+            width: 100%;
+            max-width: 500px;
             height: auto;
-            transform: translateX(-50%) translateY(-50%);
-            object-fit: cover;
-            z-index: 0;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 40px rgba(0,0,0,0.9)); /* Cria sombra para destacar no verde */
         }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-center relative selection:bg-emerald-500 selection:text-zinc-900">
     
-    <!-- Vídeo 1: A Explosão (Intro) -->
-    <video id="intro-video" class="bg-video" autoplay muted playsinline>
-        <source src="intro.mp4" type="video/mp4">
-    </video>
-    
-    <!-- Vídeo 2: O Loop Estabilizado (Fica invisível até a transição) -->
-    <video id="loop-video" class="bg-video opacity-0 transition-opacity duration-1000" muted loop playsinline>
-        <source src="loop.mp4" type="video/mp4">
-    </video>
+    <!-- Animação de Abertura (As linhas que se dividem) -->
+    <div class="curtain-top"></div>
+    <div class="curtain-bottom"></div>
 
-    <!-- Máscara escura sutil para garantir a leitura do texto sobre o brilho -->
-    <div class="absolute inset-0 bg-black/30 z-10 pointer-events-none"></div>
+    <!-- O Gradiente Neon em CSS -->
+    <div class="neon-aura"></div>
 
-    <!-- Conteúdo Principal (Texto surge depois) -->
-    <main id="main-content" class="z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full opacity-0 transition-opacity duration-1000 ease-in-out mt-[-40px]">
-        <h1 class="text-5xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-6 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+    <!-- Conteúdo Principal -->
+    <main class="content-reveal z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full relative mt-[-20px]">
+        
+        <!-- A IMAGEM ESTÁTICA ENTRA AQUI -->
+        <img src="vmv-img.png" alt="VMV" class="vmv-image mb-4">
+
+        <h1 class="text-4xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] z-10">
             Menos barulho, <br class="hidden md:block" />
             <span class="text-emerald-400">mais clareza.</span>
         </h1>
-        <p class="text-lg md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-md">
+        <p class="text-base md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] z-10 relative">
             O guia definitivo para entender o digital antes de dar o primeiro passo.
         </p>
     </main>
 
-    <!-- Fita Animada (Surge junto com o texto) -->
-    <div id="marquee-container" class="absolute bottom-12 md:bottom-20 left-[-5%] w-[110%] bg-emerald-500 py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900 opacity-0 transition-opacity duration-1000 ease-in-out">
-        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-2xl md:text-[26px] tracking-[0.2em] uppercase flex items-center">
+    <!-- Fita Animada -->
+    <div class="content-reveal absolute bottom-12 md:bottom-20 left-[-5%] w-[110%] bg-emerald-500 py-[14px] md:py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] rotate-[-2deg] z-30 border-y-[3px] border-emerald-900">
+        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-xl md:text-[26px] tracking-[0.2em] uppercase flex items-center">
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
             <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
         </div>
     </div>
 
+    <!-- Script que aciona a abertura -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const introVideo = document.getElementById("intro-video");
-            const loopVideo = document.getElementById("loop-video");
-            const mainContent = document.getElementById("main-content");
-            const marquee = document.getElementById("marquee-container");
-
-            let transitionTriggered = false;
-
-            // Função que executa a mágica da transição
-            const triggerTransition = () => {
-                if (transitionTriggered) return;
-                transitionTriggered = true;
-                
-                // 1. Faz o texto e a fita aparecerem suavemente
-                mainContent.classList.remove("opacity-0");
-                marquee.classList.remove("opacity-0");
-
-                // 2. Dá o play no vídeo de loop e faz ele aparecer por cima do escuro
-                loopVideo.play();
-                loopVideo.classList.remove("opacity-0");
-                
-                // 3. Desliga o vídeo da intro depois que a transição terminar
-                setTimeout(() => {
-                    introVideo.style.display = "none";
-                }, 1000);
-            };
-
-            // Dispara a animação exata no momento da explosão de luz (1.2 segundos)
-            introVideo.addEventListener("timeupdate", () => {
-                if (introVideo.currentTime > 1.2) {
-                    triggerTransition();
-                }
-            });
-
-            // Sistemas de segurança: se o usuário estiver com economia de bateria e o vídeo travar, o texto aparece sozinho após 2 segundos
-            introVideo.addEventListener("ended", triggerTransition);
-            setTimeout(triggerTransition, 2000);
+            // Segura a tela preta com a linha verde por 1 segundo e depois abre
+            setTimeout(() => {
+                document.body.classList.add('open-curtain');
+            }, 1000);
         });
     </script>
 </body>
