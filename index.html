@@ -1,139 +1,790 @@
 <!DOCTYPE html>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='glow' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='%2334d399'/><stop offset='100%' stop-color='%23064e3b'/></linearGradient></defs><path d='M20 45 C20 10 80 10 80 45 Q50 40 20 45 Z' fill='url(%23glow)'/><path d='M35 45 Q30 75 40 95' fill='none' stroke='%2310b981' stroke-width='6' stroke-linecap='round'/><path d='M50 43 Q50 80 50 98' fill='none' stroke='%2334d399' stroke-width='7' stroke-linecap='round'/><path d='M65 45 Q70 75 60 95' fill='none' stroke='%2310b981' stroke-width='6' stroke-linecap='round'/></svg>" type="image/svg+xml">
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#070909">
     <title>Vendas Mudam Vidas | Em Breve</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800;900&display=swap" rel="stylesheet">
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        /* Base travada para não bugar no mobile */
-        body, html {
+        /* =========================================================
+           DESIGN SYSTEM
+        ========================================================= */
+
+        :root {
+            --bg: #070909;
+            --bg-soft: #0b0f0d;
+
+            --green: #10b981;
+            --green-bright: #34d399;
+            --green-dark: #064e3b;
+
+            --white: #f8fafc;
+            --text: #d4d4d8;
+            --muted: #a1a1aa;
+
+            --ease-cinematic: cubic-bezier(0.77, 0, 0.175, 1);
+            --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100vh;
-            background-color: #0a0a0a;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            position: relative;
+            height: 100%;
         }
 
-        /* Textura de Tecido (Chumbo) */
-        .bg-texture {
-            position: absolute;
+        html {
+            background: var(--bg);
+        }
+
+        body {
+            position: relative;
+            min-height: 100svh;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    ellipse 70% 60% at 50% 46%,
+                    rgba(16, 185, 129, 0.055) 0%,
+                    rgba(16, 185, 129, 0.018) 38%,
+                    transparent 72%
+                ),
+                linear-gradient(
+                    180deg,
+                    #080a0a 0%,
+                    #070909 48%,
+                    #050707 100%
+                );
+
+            color: var(--white);
+            font-family: "Inter", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* =========================================================
+           ATMOSPHERIC BACKGROUND
+        ========================================================= */
+
+        .background {
+            position: fixed;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
-            opacity: 0.4;
-            z-index: 1;
+            z-index: 0;
+            overflow: hidden;
             pointer-events: none;
         }
-        
-        /* Aura Neon Pulsante */
+
+        .background::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.012) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    rgba(255,255,255,0.012) 1px,
+                    transparent 1px
+                );
+            background-size: 80px 80px;
+            mask-image: radial-gradient(
+                ellipse at center,
+                black 0%,
+                transparent 72%
+            );
+            opacity: 0.18;
+        }
+
+        /* Subtle grain */
+        .bg-texture {
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.14;
+            z-index: 2;
+            pointer-events: none;
+
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.42'/%3E%3C/svg%3E");
+
+            animation: grain 0.35s steps(2) infinite;
+        }
+
+        @keyframes grain {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(-2%, 1%);
+            }
+
+            50% {
+                transform: translate(1%, -2%);
+            }
+
+            75% {
+                transform: translate(2%, 1%);
+            }
+
+            100% {
+                transform: translate(-1%, -1%);
+            }
+        }
+
+        /* =========================================================
+           CENTRAL AURA
+        ========================================================= */
+
         .neon-glow {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+
+            width: min(850px, 115vw);
+            height: min(850px, 115vw);
+
+            transform: translate(-50%, -50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(16, 185, 129, 0.16) 0%,
+                    rgba(16, 185, 129, 0.075) 22%,
+                    rgba(16, 185, 129, 0.025) 45%,
+                    transparent 70%
+                );
+
+            filter: blur(12px);
+            opacity: 0.8;
+            z-index: 1;
+
+            animation: ambient-pulse 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes ambient-pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.92);
+                opacity: 0.62;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.08);
+                opacity: 0.92;
+            }
+        }
+
+        /* Secondary light */
+        .neon-glow::after {
+            content: "";
             position: absolute;
             top: 50%;
             left: 50%;
+
+            width: 34%;
+            height: 34%;
+
             transform: translate(-50%, -50%);
-            width: 120vw;
-            height: 120vw;
-            max-width: 800px;
-            max-height: 800px;
-            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.02) 50%, transparent 70%);
-            animation: pulse-glow 4s ease-in-out infinite alternate;
-            z-index: 2;
-            pointer-events: none;
+
+            border-radius: 50%;
+
+            background: rgba(52, 211, 153, 0.14);
+
+            filter: blur(90px);
         }
 
-        @keyframes pulse-glow {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        /* =========================================================
+           CINEMATIC CURTAINS
+        ========================================================= */
+
+        .curtain {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 50.5%;
+            z-index: 9999;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #030404 0%,
+                    #070909 70%,
+                    #050606 100%
+                );
+
+            transition:
+                transform 1.65s var(--ease-cinematic),
+                opacity 1.2s ease;
         }
 
-        /* Cortinas de Abertura Cinematográfica */
-        .curtain-top, .curtain-bottom {
+        .curtain::after {
+            content: "";
             position: absolute;
             left: 0;
             width: 100%;
-            height: 50vh;
-            background: #050505;
-            z-index: 9999;
-            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        .curtain-top { top: 0; border-bottom: 2px solid #10b981; }
-        .curtain-bottom { bottom: 0; border-top: 2px solid #10b981; }
-        
-        body.loaded .curtain-top { transform: translateY(-100%); }
-        body.loaded .curtain-bottom { transform: translateY(100%); }
+            height: 1px;
 
-        /* Animação de Revelação Suave */
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(16,185,129,0.15) 20%,
+                rgba(52,211,153,0.95) 50%,
+                rgba(16,185,129,0.15) 80%,
+                transparent 100%
+            );
+
+            box-shadow:
+                0 0 18px rgba(16,185,129,0.45),
+                0 0 45px rgba(16,185,129,0.18);
+        }
+
+        .curtain-top {
+            top: 0;
+            transform: translateY(0);
+        }
+
+        .curtain-top::after {
+            bottom: 0;
+        }
+
+        .curtain-bottom {
+            bottom: 0;
+            transform: translateY(0);
+        }
+
+        .curtain-bottom::after {
+            top: 0;
+        }
+
+        body.loaded .curtain-top {
+            transform: translateY(-100%);
+        }
+
+        body.loaded .curtain-bottom {
+            transform: translateY(100%);
+        }
+
+        /* =========================================================
+           MAIN CONTENT
+        ========================================================= */
+
+        main {
+            position: relative;
+            z-index: 10;
+
+            width: 100%;
+            min-height: 100svh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                2rem
+                clamp(1.25rem, 5vw, 4rem);
+
+            text-align: center;
+        }
+
+        .content {
+            position: relative;
+            width: min(900px, 100%);
+            margin-top: -9vh;
+        }
+
+        /* Fine green light behind headline */
+        .content::before {
+            content: "";
+            position: absolute;
+
+            top: 45%;
+            left: 50%;
+
+            width: 280px;
+            height: 100px;
+
+            transform: translate(-50%, -50%);
+
+            background: rgba(16,185,129,0.07);
+            filter: blur(70px);
+
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* =========================================================
+           HEADLINE
+        ========================================================= */
+
+        h1 {
+            margin: 0 0 1.35rem;
+
+            color: var(--white);
+
+            font-size: clamp(
+                2.25rem,
+                7vw,
+                5.6rem
+            );
+
+            font-weight: 900;
+            line-height: 0.94;
+            letter-spacing: -0.065em;
+
+            text-transform: uppercase;
+
+            text-wrap: balance;
+
+            text-shadow:
+                0 3px 0 rgba(255,255,255,0.015),
+                0 12px 35px rgba(0,0,0,0.55),
+                0 0 80px rgba(0,0,0,0.35);
+        }
+
+        h1 span {
+            position: relative;
+
+            display: inline-block;
+
+            color: var(--green-bright);
+
+            text-shadow:
+                0 0 25px rgba(16,185,129,0.12),
+                0 0 55px rgba(16,185,129,0.07);
+        }
+
+        h1 span::after {
+            content: "";
+
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            bottom: -0.08em;
+
+            height: 2px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(52,211,153,0.75),
+                transparent
+            );
+
+            opacity: 0.65;
+            filter: blur(0.4px);
+        }
+
+        /* =========================================================
+           SUBHEADLINE
+        ========================================================= */
+
+        .subtitle {
+            width: min(610px, 100%);
+            margin: 0 auto;
+
+            color: #b9bbc1;
+
+            font-size: clamp(
+                0.98rem,
+                2vw,
+                1.35rem
+            );
+
+            font-weight: 300;
+            line-height: 1.65;
+            letter-spacing: -0.012em;
+
+            text-shadow:
+                0 5px 20px rgba(0,0,0,0.75);
+
+            text-wrap: balance;
+        }
+
+        /* =========================================================
+           REVEAL ANIMATION
+        ========================================================= */
+
         .reveal-item {
             opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
-            transition-delay: 0.3s;
-        }
-        body.loaded .reveal-item {
-            opacity: 1;
-            transform: scale(1);
+            transform: translateY(18px) scale(0.985);
+
+            transition:
+                opacity 1.25s ease,
+                transform 1.4s var(--ease-smooth);
+
+            transition-delay: 0.55s;
         }
 
-        /* Fita Animada */
+        body.loaded .reveal-item {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* =========================================================
+           MARQUEE
+        ========================================================= */
+
+        .marquee-wrapper {
+            position: fixed;
+
+            left: -8%;
+            bottom: clamp(1.6rem, 5vh, 3rem);
+
+            width: 116%;
+
+            z-index: 20;
+
+            transform: rotate(-2deg);
+
+            background:
+                linear-gradient(
+                    100deg,
+                    #0f9f72 0%,
+                    #22c58b 45%,
+                    #10b981 100%
+                );
+
+            border-top: 1px solid rgba(167,243,208,0.35);
+            border-bottom: 1px solid rgba(2,44,34,0.65);
+
+            box-shadow:
+                0 12px 50px rgba(0,0,0,0.65),
+                0 0 35px rgba(16,185,129,0.08);
+
+            overflow: hidden;
+        }
+
+        .marquee-wrapper::before,
+        .marquee-wrapper::after {
+            content: "";
+
+            position: absolute;
+            top: 0;
+            bottom: 0;
+
+            width: 90px;
+
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .marquee-wrapper::before {
+            left: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(16,185,129,1),
+                    transparent
+                );
+        }
+
+        .marquee-wrapper::after {
+            right: 0;
+
+            background:
+                linear-gradient(
+                    270deg,
+                    rgba(16,185,129,1),
+                    transparent
+                );
+        }
+
         .marquee-container {
             display: flex;
+            align-items: center;
+
             width: max-content;
-            animation: marquee 20s linear infinite;
+
+            min-height: 58px;
+
+            animation:
+                marquee 24s linear infinite;
+
+            will-change: transform;
         }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+
+            white-space: nowrap;
+
+            padding: 0 1.25rem;
+
+            color: #031b13;
+
+            font-size: clamp(
+                1rem,
+                2vw,
+                1.55rem
+            );
+
+            font-weight: 900;
+            line-height: 1;
+
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .marquee-symbol {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 1.35rem;
+
+            color: #064e3b;
+
+            font-size: 0.8em;
+
+            opacity: 0.8;
+        }
+
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            from {
+                transform: translate3d(0, 0, 0);
+            }
+
+            to {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 640px) {
+
+            body {
+                min-height: 100svh;
+            }
+
+            .background::before {
+                background-size: 55px 55px;
+                opacity: 0.12;
+            }
+
+            .neon-glow {
+                width: 145vw;
+                height: 145vw;
+
+                top: 45%;
+            }
+
+            main {
+                padding:
+                    1.5rem
+                    1.25rem
+                    5rem;
+            }
+
+            .content {
+                margin-top: -7vh;
+            }
+
+            h1 {
+                font-size: clamp(
+                    2.45rem,
+                    11.5vw,
+                    4rem
+                );
+
+                line-height: 0.96;
+                letter-spacing: -0.07em;
+
+                margin-bottom: 1.2rem;
+            }
+
+            h1 span::after {
+                height: 1px;
+            }
+
+            .subtitle {
+                max-width: 340px;
+
+                font-size: 1rem;
+                line-height: 1.58;
+            }
+
+            .marquee-wrapper {
+                bottom: 1.35rem;
+                left: -18%;
+                width: 136%;
+            }
+
+            .marquee-container {
+                min-height: 52px;
+                animation-duration: 20s;
+            }
+
+            .marquee-item {
+                font-size: 0.92rem;
+                letter-spacing: 0.13em;
+                padding: 0 0.8rem;
+            }
+
+            .marquee-symbol {
+                margin: 0 1rem;
+            }
+        }
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-height: 680px) and (max-width: 640px) {
+
+            .content {
+                margin-top: -3vh;
+            }
+
+            h1 {
+                margin-bottom: 0.85rem;
+            }
+
+            .subtitle {
+                font-size: 0.92rem;
+            }
+
+            .marquee-wrapper {
+                bottom: 0.8rem;
+            }
+        }
+
+        /* =========================================================
+           ACCESSIBILITY / REDUCED MOTION
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .bg-texture {
+                animation: none;
+            }
+
+            .marquee-container {
+                animation: none;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Abertura -->
-    <div class="curtain-top"></div>
-    <div class="curtain-bottom"></div>
+    <!-- Cinematic Opening -->
+    <div class="curtain curtain-top" aria-hidden="true"></div>
+    <div class="curtain curtain-bottom" aria-hidden="true"></div>
 
-    <!-- Fundo Limpo -->
-    <div class="bg-texture"></div>
-    <div class="neon-glow"></div>
-
-    <!-- Conteúdo 100% Centralizado -->
-    <main class="relative z-10 flex flex-col items-center justify-center w-full h-full px-6 text-center reveal-item">
-        <!-- Ajuste fino de margem negativa para compensar o espaço visual da fita no rodapé -->
-        <div class="mt-[-10vh]">
-            <h1 class="text-[2.2rem] md:text-7xl uppercase font-black leading-[1.05] md:leading-[0.95] tracking-tighter mb-6 drop-shadow-[0_10px_20px_rgba(0,0,0,1)] text-white">
-                A bússola dos <br>
-                <span class="text-emerald-400">bastidores.</span>
-            </h1>
-            <p class="text-base md:text-xl lg:text-2xl text-zinc-300 max-w-2xl mx-auto leading-relaxed font-light drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)]">
-                O mercado digital não tem uma única saída. Desconstruímos todos os modelos de operação para você construir a sua base do jeito certo. Sem barulho, com clareza.
-            </p>
-        </div>
-    </main>
-
-    <!-- Fita Animada (Isolada no rodapé) -->
-    <div class="reveal-item absolute bottom-8 md:bottom-12 left-[-10%] w-[120%] bg-emerald-500 py-3 md:py-4 shadow-[0_10px_40px_rgba(0,0,0,0.9)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900">
-        <div class="marquee-container text-zinc-950 font-black text-xl md:text-[26px] tracking-[0.2em] uppercase items-center">
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-        </div>
+    <!-- Atmospheric Background -->
+    <div class="background" aria-hidden="true">
+        <div class="neon-glow"></div>
+        <div class="bg-texture"></div>
     </div>
 
-    <!-- Gatilho da Animação -->
+    <!-- Main Content -->
+    <main class="reveal-item">
+
+        <div class="content">
+
+            <h1>
+                A bússola dos<br>
+                <span>bastidores.</span>
+            </h1>
+
+            <p class="subtitle">
+                O mercado digital não tem uma única saída. Desconstruímos todos os modelos de operação para você construir a sua base do jeito certo. Sem barulho, com clareza.
+            </p>
+
+        </div>
+
+    </main>
+
+    <!-- Animated Marquee -->
+    <div class="marquee-wrapper reveal-item" aria-hidden="true">
+
+        <div class="marquee-container">
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+            <span class="marquee-item">
+                EM BREVE
+                <span class="marquee-symbol">✦</span>
+                VENDAS MUDAM VIDAS
+                <span class="marquee-symbol">✦</span>
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- Animation Trigger -->
     <script>
-        window.onload = () => {
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 800); 
-        };
+        window.addEventListener("load", () => {
+            window.setTimeout(() => {
+                document.body.classList.add("loaded");
+            }, 800);
+        });
     </script>
+
 </body>
 </html>
