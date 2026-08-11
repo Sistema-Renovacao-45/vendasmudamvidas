@@ -7,6 +7,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800;900&display=swap" rel="stylesheet">
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         /* Base e Reset para travar a tela e não bugar no celular */
         body, html {
@@ -92,16 +116,7 @@
             transform: scale(1);
         }
 
-        /* Fita Animada Contínua */
-        .marquee-container {
-            display: flex;
-            width: max-content;
-            animation: marquee 20s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+
     </style>
 </head>
 <body>
@@ -110,9 +125,11 @@
     <div class="curtain-top"></div>
     <div class="curtain-bottom"></div>
 
-    <!-- FUNDO: Textura, Luz Neon e Imagem VMV -->
+    <!-- FUNDO: Textura e Luz Neon -->
     <div class="bg-texture"></div>
     <div class="neon-glow"></div>
+    
+    <!-- CAMADA 2: Imagem VMV -->
     <img src="vmv-img.png" alt="VMV" class="vmv-backdrop reveal-item">
 
     <!-- FRENTE: Textos Centralizados -->
@@ -126,18 +143,7 @@
         </p>
     </main>
 
-    <!-- RODAPÉ: Fita Animada -->
-    <div class="reveal-item absolute bottom-8 md:bottom-16 left-[-10%] w-[120%] bg-emerald-500 py-3 md:py-4 shadow-[0_10px_40px_rgba(0,0,0,0.9)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900">
-        <div class="marquee-container text-zinc-950 font-black text-xl md:text-[26px] tracking-[0.2em] uppercase items-center">
-            <!-- Os itens são repetidos para a fita não quebrar -->
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-        </div>
-    </div>
+
 
     <!-- Script de Abertura -->
     <script>
@@ -148,104 +154,4 @@
         };
     </script>
 </body>
-</html><html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendas Mudam Vidas | Em Breve</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        emerald: {
-                            300: '#6ee7b7',
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
-                            950: '#022c22',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050505;
-        }
-
-        .vmv-bg-text {
-            font-size: clamp(120px, 28vw, 450px);
-            font-weight: 900;
-            line-height: 1;
-            letter-spacing: 0.15em;
-            color: #050505;
-            -webkit-text-stroke: 2px rgba(16, 185, 129, 0.4);
-            text-shadow: 0 0 80px rgba(16, 185, 129, 0.2);
-            white-space: nowrap;
-        }
-        
-        /* Animação do Letreiro Contínuo */
-        .animate-marquee {
-            display: inline-block;
-            animation: marquee 25s linear infinite;
-        }
-        
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-    </style>
-</head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center relative overflow-hidden selection:bg-emerald-500 selection:text-zinc-900">
-    
-    <!-- Fundo V M V -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-emerald-600 rounded-full blur-[180px] opacity-10"></div>
-        <div class="vmv-bg-text select-none">
-            V M V
-        </div>
-    </div>
-
-    <!-- Conteúdo Principal -->
-    <main class="z-10 flex flex-col items-center text-center px-6 max-w-4xl w-full mt-[-60px]">
-        
-        <!-- Título de Impacto -->
-        <h1 class="text-5xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-8">
-            Menos barulho, <br class="hidden md:block" />
-            <span class="text-emerald-500">mais clareza.</span>
-        </h1>
-
-        <!-- Subtítulo -->
-        <p class="text-lg md:text-2xl text-zinc-400 max-w-xl text-center leading-relaxed font-light mb-12">
-            O guia definitivo para entender o digital antes de dar o primeiro passo.
-        </p>
-    </main>
-
-    <!-- Fita Animada (Ticker) -->
-    <div class="absolute bottom-12 md:bottom-20 left-[-5%] w-[110%] bg-emerald-500 py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.5)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900">
-        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-2xl md:text-[26px] tracking-[0.2em] uppercase flex items-center">
-            <!-- Sequência Repetida para o Loop Infinito -->
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
-        </div>
-    </div>
-
-</body>
 </html>
-
