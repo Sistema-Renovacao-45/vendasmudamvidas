@@ -8,69 +8,113 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800;900&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050505;
-            /* Padrão de Colmeia em CSS Puro */
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='69.28203230275509' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 11.547L40 34.641L20 46.188L0 34.641L0 11.547L20 0L40 11.547ZM20 69.282L0 57.735L0 34.641L20 46.188L40 34.641L40 57.735L20 69.282Z' fill='%2310b981' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E");
+        body { 
+            background-color: #000; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; /* Trava a rolagem da página */
         }
         
-        /* Animação do Letreiro Contínuo */
-        .animate-marquee {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
+        /* Fita Animada */
+        .animate-marquee { 
+            display: inline-block; 
+            animation: marquee 20s linear infinite; 
+        }
+        @keyframes marquee { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
         }
         
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Forma do Cristal/Hexágono */
-        .crystal-shape {
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        /* Ajuste para os vídeos cobrirem toda a tela sem distorcer */
+        .bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+            z-index: 0;
         }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center relative overflow-hidden selection:bg-emerald-500 selection:text-zinc-900">
+<body class="text-white min-h-screen flex flex-col items-center justify-center relative selection:bg-emerald-500 selection:text-zinc-900">
     
-    <!-- Brilho de Fundo (Aura) -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-600 rounded-full blur-[150px] opacity-20 pointer-events-none z-0"></div>
+    <!-- Vídeo 1: A Explosão (Intro) -->
+    <video id="intro-video" class="bg-video" autoplay muted playsinline>
+        <source src="intro.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Vídeo 2: O Loop Estabilizado (Fica invisível até a transição) -->
+    <video id="loop-video" class="bg-video opacity-0 transition-opacity duration-1000" muted loop playsinline>
+        <source src="loop.mp4" type="video/mp4">
+    </video>
 
-    <!-- Conteúdo Principal -->
-    <main class="z-10 flex flex-col items-center text-center px-6 max-w-4xl w-full mt-[-80px]">
-        
-        <!-- O Arquétipo do Cristal/Colmeia -->
-        <div class="relative w-28 h-28 mb-12 flex justify-center items-center">
-            <div class="absolute inset-0 bg-emerald-500 blur-2xl opacity-40 animate-pulse"></div>
-            <div class="relative w-20 h-24 bg-gradient-to-br from-emerald-400 to-emerald-900 crystal-shape shadow-[0_0_40px_rgba(16,185,129,0.8)] border border-emerald-300"></div>
-        </div>
+    <!-- Máscara escura sutil para garantir a leitura do texto sobre o brilho -->
+    <div class="absolute inset-0 bg-black/30 z-10 pointer-events-none"></div>
 
-        <!-- Título de Impacto -->
-        <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-tight">
+    <!-- Conteúdo Principal (Texto surge depois) -->
+    <main id="main-content" class="z-20 flex flex-col items-center text-center px-6 max-w-4xl w-full opacity-0 transition-opacity duration-1000 ease-in-out mt-[-40px]">
+        <h1 class="text-5xl md:text-7xl uppercase font-black leading-[0.95] tracking-tighter mb-6 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
             Menos barulho, <br class="hidden md:block" />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">mais clareza.</span>
+            <span class="text-emerald-400">mais clareza.</span>
         </h1>
-
-        <!-- Subtítulo -->
-        <p class="text-lg md:text-2xl text-zinc-400 max-w-2xl font-light">
+        <p class="text-lg md:text-2xl text-zinc-300 max-w-xl text-center leading-relaxed font-light mb-12 drop-shadow-md">
             O guia definitivo para entender o digital antes de dar o primeiro passo.
         </p>
     </main>
 
-    <!-- Fita Animada (Ticker) -->
-    <div class="absolute bottom-16 md:bottom-24 left-0 w-full bg-emerald-500 py-3 shadow-[0_0_40px_rgba(16,185,129,0.4)] rotate-[-3deg] scale-110 z-20 border-y-2 border-emerald-900">
-        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-xl md:text-2xl tracking-[0.25em] uppercase flex items-center">
-            <!-- Sequência Original -->
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
-            <!-- Duplicado para fluidez do loop -->
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
-            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-sm">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-sm">✦</span></span>
+    <!-- Fita Animada (Surge junto com o texto) -->
+    <div id="marquee-container" class="absolute bottom-12 md:bottom-20 left-[-5%] w-[110%] bg-emerald-500 py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] rotate-[-2deg] z-20 border-y-[3px] border-emerald-900 opacity-0 transition-opacity duration-1000 ease-in-out">
+        <div class="whitespace-nowrap animate-marquee text-zinc-950 font-black text-2xl md:text-[26px] tracking-[0.2em] uppercase flex items-center">
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
+            <span class="px-6 flex items-center">EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
+            <span class="px-6 flex items-center">EM EM BREVE <span class="mx-6 text-lg text-emerald-950">✦</span> VENDAS MUDAM VIDAS <span class="mx-6 text-lg text-emerald-950">✦</span></span>
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const introVideo = document.getElementById("intro-video");
+            const loopVideo = document.getElementById("loop-video");
+            const mainContent = document.getElementById("main-content");
+            const marquee = document.getElementById("marquee-container");
+
+            let transitionTriggered = false;
+
+            // Função que executa a mágica da transição
+            const triggerTransition = () => {
+                if (transitionTriggered) return;
+                transitionTriggered = true;
+                
+                // 1. Faz o texto e a fita aparecerem suavemente
+                mainContent.classList.remove("opacity-0");
+                marquee.classList.remove("opacity-0");
+
+                // 2. Dá o play no vídeo de loop e faz ele aparecer por cima do escuro
+                loopVideo.play();
+                loopVideo.classList.remove("opacity-0");
+                
+                // 3. Desliga o vídeo da intro depois que a transição terminar
+                setTimeout(() => {
+                    introVideo.style.display = "none";
+                }, 1000);
+            };
+
+            // Dispara a animação exata no momento da explosão de luz (1.2 segundos)
+            introVideo.addEventListener("timeupdate", () => {
+                if (introVideo.currentTime > 1.2) {
+                    triggerTransition();
+                }
+            });
+
+            // Sistemas de segurança: se o usuário estiver com economia de bateria e o vídeo travar, o texto aparece sozinho após 2 segundos
+            introVideo.addEventListener("ended", triggerTransition);
+            setTimeout(triggerTransition, 2000);
+        });
+    </script>
 </body>
 </html>
